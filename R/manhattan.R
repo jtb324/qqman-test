@@ -48,7 +48,7 @@
 manhattan <- function(x, chr="CHR", bp="BP", p="P", snp="SNP", 
                       col=c("gray10", "gray60"), chrlabs=NULL,
                       suggestiveline=-log10(1e-5), genomewideline=-log10(5e-8), 
-                      highlight=NULL, logp=TRUE, annotatePval = NULL, annotateTop = TRUE, ...) {
+                      highlight=NULL, highlight_col=NULL, logp=TRUE, annotatePval = NULL, annotateTop = TRUE, ...) {
 
     # Not sure why, but package check will warn without this.
     CHR=BP=P=index=NULL
@@ -203,12 +203,19 @@ manhattan <- function(x, chr="CHR", bp="BP", p="P", snp="SNP",
     # Add suggestive and genomewide lines
     if (suggestiveline) abline(h=suggestiveline, col="blue")
     if (genomewideline) abline(h=genomewideline, col="red")
+    # these are significant
+    # these are in linkage with a significant
     
     # Highlight snps from a character vector
-    if (!is.null(highlight)) {
+    for 
+    if ((!is.null(highlight)) & (length(highlight) == length(highlight_col))) {
         if (any(!(highlight %in% d$SNP))) warning("You're trying to highlight SNPs that don't exist in your results.")
-        d.highlight=d[which(d$SNP %in% highlight), ]
-        with(d.highlight, points(pos, logp, col="green3", pch=20, ...)) 
+        for (snps in highlight) {
+            d.highlight=d[which(d$SNP %in% highlight), ]
+            with(d.highlight, points(pos, logp, col="green3", pch=20, ...)) 
+        }
+    } else {
+        warning("You didn't provide enough colors for the highlight vector")
     }
     
     # Highlight top SNPs
